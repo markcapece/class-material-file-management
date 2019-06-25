@@ -26,8 +26,8 @@ class TodoManager(object):
 
     def list(self, status=STATUS_ALL, category=CATEGORY_GENERAL):
         result = {}
-        for file in sorted(self.path.glob('*.json')):
-            with file.open('r') as fp:
+        for f in sorted(self.path.glob('*.json')):
+            with f.open('r') as fp:
                 jdict = json.load(fp)
             if status == TodoManager.STATUS_ALL:
                 status = [TodoManager.STATUS_ALL, TodoManager.STATUS_DONE, TodoManager.STATUS_PENDING]
@@ -75,12 +75,12 @@ class TodoManager(object):
     def complete(self, task, category=CATEGORY_GENERAL):
         p = self.path / '{}.json'.format(category)
 
-        with p.open('r') as f:
-            todo_dict = json.load(f)
+        with p.open('r') as fp:
+            todo_dict = json.load(fp)
 
         for todo in todo_dict['todos']:
             if todo['task'] == task:
                 todo['status'] = self.STATUS_DONE
 
-        with p.open('w') as f:
-            json.dump(todo_dict, f)
+        with p.open('w') as fp:
+            json.dump(todo_dict, fp)
